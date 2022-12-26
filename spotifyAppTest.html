@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+	<title> Spotify app</title>
+	<link rel="stylesheet" href="styles.css" />
+	</head>
+	
+	
+	<body>
+		<button id="btn"> Get Token </button>
+	
+		<button id="category"> Get Categories </button>
+	
+		<hr>
+
+		<div>
+			<h2>Categories</h2>
+			<div id="showData"></div>
+		</div>
+		<script>
+			document.getElementById('btn').addEventListener('click', loadToken);
+			
+			document.getElementById('category').addEventListener('click', loadCategories);
+			
+					var client_id = '31aba754543b4e538fc535e43d5db002';
+			var client_secret = '44e5e8c196894d9cbb76168ae2211fdb';
+
+			var token='';
+			
+			
+			async function  loadToken(){
+				const url= "https://accounts.spotify.com/api/token";
+				
+				let obj ={
+					method: 'POST',
+					headers: {
+						'Authorization': 'Basic ' + btoa(client_id + ':' + client_secret),
+						'Content-Type': 'application/x-www-form-urlencoded'
+					},
+					body: 'grant_type=client_credentials'
+					};
+				
+				
+				try{
+					let response = await fetch(url,obj)
+				
+					let data = await response.json();
+				
+					console.log(data);
+					token= data.access_token;
+				
+				}catch(err){
+					console.log(err);
+				}
+			
+			}
+			
+			
+			async function loadCategories(){
+				const url='https://api.spotify.com/v1/browse/categories'
+				
+				try{
+					let response = await fetch(url,
+					{
+					method: 'GET',
+					headers: {
+						'Authorization': 'Bearer ' + token 
+					}
+					})
+				let data = await response.json();
+					console.log(data);
+					showCategories(data);
+
+				}catch(err){
+					console.log(err);
+				}
+				
+			
+			}
+
+			function showCategories(data){
+					let list = data.categories.items;
+					let output='';
+
+					list.forEach((category) => {
+
+						output += `
+							<div class="wrapper">
+								<h3> ${category.name} </h3>
+								<img height="200" width="200" src="${category.icons[0].url}" />
+								<button class="btn-primary" onclick="fetchPlayListByCategory('${category.id}')">Check this Category</button>
+							</div>
+						`
+					});
+
+					document.getElementById("showData").innerHTML = output;
+
+
+			}
+
+			async function fetchPlayListByCategory(category_id){
+				const url= 'https://api.spotify.com/v1/browse/categories/'+category_id+'/playlists';
+				try{
+					let response = await fetch(url,
+					{
+					method: 'GET',
+					headers: {
+						'Authorization': 'Bearer ' + token 
+					}
+					})
+				let data = await response.json();
+					console.log(data);
+					
+
+				}catch(err){
+					console.log(err);
+				}
+			} 
+		
+		</script>
+	</body>
+</html>

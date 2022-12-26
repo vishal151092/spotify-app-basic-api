@@ -1,0 +1,29 @@
+#category{
+    color: #fff;
+    background-color: cadetblue;
+
+}
+.btn-primary{
+    color: #fff;
+    background-color: #0275d8;
+    display: inline-block;
+    text-align: center;
+    margin-top: 1em;
+
+}
+
+#showData{
+    display: flex;
+    gap: 1em;
+    flex-wrap: wrap;
+}
+.wrapper{
+    border: 1px solid gray;
+    width: 20em;
+    height: 20em;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
